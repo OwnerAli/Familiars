@@ -1,13 +1,14 @@
 package me.ogali.familiarsplugin.processes.taming;
 
 import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
-import org.bukkit.entity.Player;
+import me.ogali.familiarsplugin.players.domain.FamiliarPlayer;
 
 public interface TamingProcess {
 
-    void interactWithUntamed(Player player, UntamedFamiliar untamedFamiliar);
-    void startTaming(Player player, UntamedFamiliar untamedFamiliar);
-    void cancelTaming(Player player, UntamedFamiliar untamedFamiliar);
-    void finishTaming(Player player, UntamedFamiliar untamedFamiliar);
+    void interactWithUntamed(FamiliarPlayer player, UntamedFamiliar untamedFamiliar);
+    void startTaming(FamiliarPlayer player, UntamedFamiliar untamedFamiliar);
+    boolean canContinueToTame(FamiliarPlayer player, UntamedFamiliar untamedFamiliar);
+    void cancelTaming(FamiliarPlayer player, UntamedFamiliar untamedFamiliar);
+    void finishTaming(FamiliarPlayer player, UntamedFamiliar untamedFamiliar);
 
 }

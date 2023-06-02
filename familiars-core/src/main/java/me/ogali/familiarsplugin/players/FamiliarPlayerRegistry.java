@@ -9,16 +9,17 @@ public class FamiliarPlayerRegistry {
 
     private final Map<UUID, FamiliarPlayer> familiarPlayerMap = new HashMap<>();
 
-    public void addFamiliarPlayer(FamiliarPlayer familiarPlayer) {
-        familiarPlayerMap.put(familiarPlayer.getPlayerUUID(), familiarPlayer);
+    public void registerFamiliarPlayer(Player player) {
+        FamiliarPlayer familiarPlayer = new FamiliarPlayer(player);
+        familiarPlayerMap.put(player.getUniqueId(), familiarPlayer);
     }
 
-    public void removeFamiliarPLayerByUUID(UUID uuid) {
+    public void unregisterFamiliarPlayerByUUID(UUID uuid) {
         familiarPlayerMap.remove(uuid);
     }
 
-    public void removeFamiliarPlayerByPlayer(Player player) {
-        removeFamiliarPLayerByUUID(player.getUniqueId());
+    public void unregisterFamiliarPlayerByPlayer(Player player) {
+        unregisterFamiliarPlayerByUUID(player.getUniqueId());
     }
 
     public Optional<FamiliarPlayer> getFamiliarPlayerByUUID(UUID uuid) {
@@ -26,7 +27,7 @@ public class FamiliarPlayerRegistry {
                 .get(uuid));
     }
 
-    public Optional<FamiliarPlayer> getPlayerByPlayer(Player player) {
+    public Optional<FamiliarPlayer> getFamiliarPlayerByPlayer(Player player) {
         return getFamiliarPlayerByUUID(player.getUniqueId());
     }
 

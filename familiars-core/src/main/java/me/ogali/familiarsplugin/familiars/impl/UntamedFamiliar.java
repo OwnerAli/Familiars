@@ -1,6 +1,7 @@
 package me.ogali.familiarsplugin.familiars.impl;
 
 import lombok.Getter;
+import me.ogali.familiarsplugin.FamiliarsPlugin;
 import me.ogali.familiarsplugin.familiars.Rarity;
 import me.ogali.familiarsplugin.familiars.Tameable;
 import me.ogali.familiarsplugin.familiars.domain.Familiar;
@@ -28,8 +29,10 @@ public class UntamedFamiliar extends Familiar implements Tameable {
     }
 
     @Override
-    public void tame(Player player) {
-        tamingProcess.interactWithUntamed(player, this);
+    public void interact(Player player) {
+        FamiliarsPlugin.getInstance().getFamiliarPlayerRegistry()
+                .getFamiliarPlayerByUUID(player.getUniqueId())
+                .ifPresent(familiarPlayer -> tamingProcess.interactWithUntamed(familiarPlayer, this));
     }
 
 }

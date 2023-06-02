@@ -4,8 +4,17 @@ import lombok.Getter;
 import me.ogali.familiarsplugin.familiars.Rarity;
 import me.ogali.familiarsplugin.familiars.domain.Familiar;
 import me.ogali.familiarsplugin.utils.Chat;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 @Getter
 public class TamedFamiliar extends Familiar {
@@ -29,8 +38,19 @@ public class TamedFamiliar extends Familiar {
         getEntity().setCustomName(Chat.colorizeHex("#bc98eb" + getDisplayName()));
     }
 
-    public void manage() {
-        Chat.tell(owner, "THIS IS YOUR PET!!!!!");
+    @Override
+    public void interact(Player player) {
+        Inventory inventory = Bukkit.createInventory(player, InventoryType.DROPPER,
+                Chat.colorizeHex("&6&lManage " + getDisplayName()));
+        ItemStack infoItem = new ItemStack(Material.PLAYER_HEAD);
+        ItemMeta itemMeta = infoItem.getItemMeta();
+        itemMeta.setDisplayName(Chat.colorize("&d&lPET INFO"));
+        itemMeta.setLore(List.of(Chat.colorize("&fType: " + getEntity().getType()), Chat.colorize("&fHealth: " +
+                ((LivingEntity) getEntity()).getHealth() + "♡")));
+        infoItem.setItemMeta(itemMeta);
+
+        inventory.setItem(1, infoItem);
+        player.openInventory(inventory);
     }
 
 }

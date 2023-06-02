@@ -5,7 +5,7 @@ import me.ogali.familiarsplugin.familiars.Rarity;
 import me.ogali.familiarsplugin.familiars.impl.TamedFamiliar;
 import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
 import me.ogali.familiarsplugin.nms.goals.PathfinderGoalFollowOwner;
-import me.ogali.familiarsplugin.processes.taming.impl.TimedTamingProcess;
+import me.ogali.familiarsplugin.processes.taming.impl.impl.DamageTimedTamingProcess;
 import me.ogali.familiarsplugin.utils.Chat;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.EntityType;
@@ -38,13 +38,13 @@ public class CustomCreatureProvider_v1_18_R2 extends CustomCreatureProvider {
         blaze.goalSelector.removeAllGoals();
         blaze.goalSelector.addGoal(0, new AvoidEntityGoal<>(blaze, net.minecraft.world.entity.player.Player.class, 10, 10, 1.6));
         FamiliarsPlugin.getInstance().getFamiliarRegistry().registerFamiliar(new UntamedFamiliar(blaze.getBukkitEntity(), "Maniac",
-                new Rarity(""), "maniac", new TimedTamingProcess("test", Particle.HEART,
-                Sound.ENTITY_PLAYER_LEVELUP, 5, 3), 50, 1.3f));
+                new Rarity(""), "maniac", new DamageTimedTamingProcess("test", Particle.HEART,
+                Sound.ENTITY_PLAYER_LEVELUP, 5, 5, blaze.getHealth()), 50, 1.3f));
         craftWorld.addEntityToWorld(blaze, CreatureSpawnEvent.SpawnReason.CUSTOM);
     }
 
     @Override
-    public void spawnCustomMobInCraftWorldWithPetPathfinderGoals(Player owner, UntamedFamiliar untamedFamiliar) {
+    public TamedFamiliar spawnCustomMobInCraftWorldWithPetPathfinderGoals(Player owner, UntamedFamiliar untamedFamiliar) {
         Entity bukkitEntity = untamedFamiliar.getEntity();
         CraftEntity craftEntity = (CraftEntity) bukkitEntity;
         net.minecraft.world.entity.Entity mcEntity = craftEntity.getHandle();
@@ -62,6 +62,7 @@ public class CustomCreatureProvider_v1_18_R2 extends CustomCreatureProvider {
 
         mcEntity.remove(net.minecraft.world.entity.Entity.RemovalReason.DISCARDED);
         craftWorld.addEntityToWorld(mob, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        return tamedFamiliar;
     }
 
     private Mob cloneMcEntity(net.minecraft.world.entity.Entity entity, CraftWorld craftWorld, Location location) {

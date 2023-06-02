@@ -2,11 +2,12 @@ package me.ogali.familiarsplugin.familiars.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.ogali.familiarsplugin.familiars.Interactable;
 import me.ogali.familiarsplugin.familiars.Rarity;
 import org.bukkit.entity.Entity;
 
 @Getter
-public abstract class Familiar {
+public abstract class Familiar implements Interactable {
 
     @Setter
     private Entity entity;

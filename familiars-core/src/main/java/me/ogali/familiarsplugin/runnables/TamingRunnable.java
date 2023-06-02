@@ -3,41 +3,41 @@ package me.ogali.familiarsplugin.runnables;
 import lombok.RequiredArgsConstructor;
 import me.ogali.familiarsplugin.FamiliarsPlugin;
 import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
+import me.ogali.familiarsplugin.players.domain.FamiliarPlayer;
 import me.ogali.familiarsplugin.processes.taming.impl.TimedTamingProcess;
 import org.bukkit.Particle;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 @RequiredArgsConstructor
 public class TamingRunnable extends BukkitRunnable {
 
     private final TimedTamingProcess timedTamingProcess;
-    private Player player;
-    private UntamedFamiliar untamedFamiliar;
-
-    public void startTaming(Player owner, UntamedFamiliar untamedFamiliar) {
-        this.runTaskTimer(FamiliarsPlugin.getInstance(), 0, timedTamingProcess.getDurationInSeconds() * 20);
-        timedTamingProcess.setStarted(true);
-        this.player = owner;
-        this.untamedFamiliar = untamedFamiliar;
-    }
+    private final FamiliarPlayer familiarPlayer;
+    private final UntamedFamiliar untamedFamiliar;
+    private final FamiliarsPlugin familiarsPlugin;
+    private BukkitTask task;
 
     @Override
     public void run() {
-        if (timedTamingProcess.shouldCancelTaming(player, untamedFamiliar)) {
-            this.cancel();
-            timedTamingProcess.setStarted(false);
-            timedTamingProcess.cancelTaming(player, untamedFamiliar);
+        if (!timedTamingProcess.canContinueToTame(familiarPlayer, untamedFamiliar)) {
+            cancelTaming();
             return;
         }
-        if (timedTamingProcess.getProgress() == 100) {
-            timedTamingProcess.finishTaming(player, untamedFamiliar);
+
+        if (timedTamingProcess.getProgress() >= 100) {
+            finishTaming();
             return;
         }
-        int increment = calculateTamingIncrement();
-        timedTamingProcess.setProgress(timedTamingProcess.getProgress() + increment);
+
+        timedTamingProcess.setProgress(timedTamingProcess.getProgress() + calculateTamingIncrement());
         untamedFamiliar.getEntity().getWorld().spawnParticle(Particle.HEART,
                 untamedFamiliar.getEntity().getLocation().add(0, 2, 0), 10);
+    }
+
+    public void startTaming() {
+        this.task = runTaskTimer(familiarsPlugin, 0, 20);
+        timedTamingProcess.setStarted(true);
     }
 
     private int calculateTamingIncrement() {
@@ -48,6 +48,16 @@ public class TamingRunnable extends BukkitRunnable {
                 (100 / timedTamingProcess.getDurationInSeconds()));
 
         return (int) (remainingProgress / remainingTime);
+    }
+
+    private void cancelTaming() {
+        task.cancel();
+        timedTamingProcess.cancelTaming(familiarPlayer, untamedFamiliar);
+    }
+
+    private void finishTaming() {
+        task.cancel();
+        timedTamingProcess.finishTaming(familiarPlayer, untamedFamiliar);
     }
 
 }

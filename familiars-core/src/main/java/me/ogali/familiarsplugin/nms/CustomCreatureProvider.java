@@ -27,14 +27,14 @@ public abstract class CustomCreatureProvider {
 
     public abstract void spawnCustomMobInCraftWorld(Player owner, Location location);
 
-    public abstract void spawnCustomMobInCraftWorldWithPetPathfinderGoals(Player owner, UntamedFamiliar untamedFamiliar);
+    public abstract TamedFamiliar spawnCustomMobInCraftWorldWithPetPathfinderGoals(Player owner, UntamedFamiliar untamedFamiliar);
 
     public static void spawnUntamedFamiliar(Player owner, Location location) {
         instance.spawnCustomMobInCraftWorld(owner, location);
     }
 
-    public static void spawnTamedFamiliar(Player owner, UntamedFamiliar untamedFamiliar) {
-        instance.spawnCustomMobInCraftWorldWithPetPathfinderGoals(owner, untamedFamiliar);
+    public static TamedFamiliar spawnTamedFamiliar(Player owner, UntamedFamiliar untamedFamiliar) {
+        return instance.spawnCustomMobInCraftWorldWithPetPathfinderGoals(owner, untamedFamiliar);
     }
 
 }

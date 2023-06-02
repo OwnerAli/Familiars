@@ -10,9 +10,11 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import lombok.Getter;
 import me.ogali.familiarsplugin.familiars.FamiliarRegistry;
-import me.ogali.familiarsplugin.listeners.FamiliarInteractListener;
+import me.ogali.familiarsplugin.listeners.PlayerInteractListener;
+import me.ogali.familiarsplugin.listeners.PlayerJoinListener;
 import me.ogali.familiarsplugin.nms.ActionBarProvider;
 import me.ogali.familiarsplugin.nms.CustomCreatureProvider;
+import me.ogali.familiarsplugin.players.FamiliarPlayerRegistry;
 import me.ogali.familiarsplugin.regions.domain.SpawnableRegion;
 import me.ogali.familiarsplugin.utils.Chat;
 import org.bukkit.Bukkit;
@@ -33,6 +35,8 @@ public final class FamiliarsPlugin extends JavaPlugin {
 
     @Getter
     private FamiliarRegistry familiarRegistry;
+    @Getter
+    private FamiliarPlayerRegistry familiarPlayerRegistry;
 
     public static StateFlag FAMILLIAR_SPAWNING_FLAG;
 
@@ -78,10 +82,12 @@ public final class FamiliarsPlugin extends JavaPlugin {
 
     private void registerHandlers() {
         this.familiarRegistry = new FamiliarRegistry();
+        this.familiarPlayerRegistry = new FamiliarPlayerRegistry();
     }
 
     private void registerListeners() {
-        getServer().getPluginManager().registerEvents(new FamiliarInteractListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
     }
 
     private void loadSpawnableRegionsLater() {
@@ -103,7 +109,7 @@ public final class FamiliarsPlugin extends JavaPlugin {
         List<World> spawnableWorlds = spawnableWorldNames
                 .stream()
                 .map(Bukkit::getWorld)
-                .collect(Collectors.toList());
+                .toList();
         spawnableWorlds.forEach(world -> {
             RegionManager regionManager = regionContainer.get(BukkitAdapter.adapt(world));
             if (regionManager == null) return;
