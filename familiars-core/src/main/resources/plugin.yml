@@ -1,0 +1,5 @@
+name: Familiars
+version: '${project.version}'
+main: me.ogali.familiarsplugin.FamiliarsPlugin
+api-version: 1.18
+depend: [WorldGuard]
