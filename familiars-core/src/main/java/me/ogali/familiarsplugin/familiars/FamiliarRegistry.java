@@ -1,7 +1,6 @@
 package me.ogali.familiarsplugin.familiars;
 
 import me.ogali.familiarsplugin.familiars.domain.Familiar;
-import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
 import org.bukkit.entity.Entity;
 
 import java.util.HashSet;

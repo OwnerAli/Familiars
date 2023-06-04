@@ -5,16 +5,15 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import lombok.RequiredArgsConstructor;
 import me.ogali.familiarsplugin.FamiliarsPlugin;
 import me.ogali.familiarsplugin.familiars.Rarity;
+import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
+import me.ogali.familiarsplugin.nms.CustomCreatureProvider;
+import me.ogali.familiarsplugin.randomizers.domain.UntamedFamiliarSelector;
 import me.ogali.familiarsplugin.regions.Spawnable;
-import me.ogali.familiarsplugin.utils.Chat;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -22,24 +21,21 @@ public class SpawnableRegion implements Spawnable {
 
     private final World world;
     private final ProtectedRegion region;
-    private Set<Rarity> raritySet;
+    private final UntamedFamiliarSelector untamedFamiliarSelector;
+
+    private final Set<Rarity> raritySet;
+
+    public SpawnableRegion(World world, ProtectedRegion region, List<UntamedFamiliar> untamedFamiliarList) {
+        this.world = world;
+        this.region = region;
+        this.raritySet = new HashSet<>();
+        this.untamedFamiliarSelector = new UntamedFamiliarSelector(untamedFamiliarList);
+    }
 
     @Override
     public void spawn() {
-        Location randomLocationInRegion = getRandomLocationInRegion();
-        LivingEntity entity = (LivingEntity) world.spawnEntity(randomLocationInRegion, EntityType.BEE);
-        entity.setCustomName(Chat.colorize("&6&l?????? &e(EXOTIC FAMILLIAR)"));
-        entity.setCustomNameVisible(true);
-        entity.setAI(false);
-        entity.setGravity(false);
-        ItemStack poopooItem = new ItemStack(Material.BROWN_DYE);
-        poopooItem.getItemMeta().setDisplayName(Chat.colorize("&6&lPOOPOO"));
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                world.dropItem(entity.getLocation().add(0.1, 0.1, 0.1), poopooItem);
-            }
-        }.runTaskTimer(FamiliarsPlugin.getInstance(), 0, 40);
+        CustomCreatureProvider.spawnUntamedFamiliar(untamedFamiliarSelector.getRandomSelection(),
+                getRandomLocationInRegion());
     }
 
     private Location getRandomLocationInRegion() {

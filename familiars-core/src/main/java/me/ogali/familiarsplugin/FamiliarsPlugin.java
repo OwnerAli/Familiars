@@ -10,21 +10,26 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import lombok.Getter;
 import me.ogali.familiarsplugin.familiars.FamiliarRegistry;
+import me.ogali.familiarsplugin.familiars.Rarity;
+import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
 import me.ogali.familiarsplugin.listeners.PlayerInteractListener;
 import me.ogali.familiarsplugin.listeners.PlayerJoinListener;
 import me.ogali.familiarsplugin.nms.ActionBarProvider;
-import me.ogali.familiarsplugin.nms.CustomCreatureProvider;
 import me.ogali.familiarsplugin.players.FamiliarPlayerRegistry;
+import me.ogali.familiarsplugin.processes.taming.impl.impl.DistanceTimedTamingProcess;
 import me.ogali.familiarsplugin.regions.domain.SpawnableRegion;
 import me.ogali.familiarsplugin.utils.Chat;
 import org.bukkit.Bukkit;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class FamiliarsPlugin extends JavaPlugin {
 
@@ -60,7 +65,6 @@ public final class FamiliarsPlugin extends JavaPlugin {
             public void run() {
                 Player xxAli = Bukkit.getPlayer("xxAli");
                 ActionBarProvider.sendActionBar(xxAli, "HELLOOOO!!!!!!!!");
-                CustomCreatureProvider.spawnUntamedFamiliar(xxAli, xxAli.getLocation());
             }
         }.runTaskLater(this, 20 * 10);
         initializePlugin();
@@ -92,14 +96,14 @@ public final class FamiliarsPlugin extends JavaPlugin {
 
     private void loadSpawnableRegionsLater() {
         List<SpawnableRegion> spawnableRegionList = new ArrayList<>();
-        getAllSpawnableRegions().forEach((world, region) -> spawnableRegionList.add(new SpawnableRegion(world, region)));
+        getAllSpawnableRegions().forEach((world, region) -> spawnableRegionList.add(new SpawnableRegion(world, region, getUntamedFamiliarList())));
 
         new BukkitRunnable() {
             @Override
             public void run() {
                 spawnableRegionList.forEach(SpawnableRegion::spawn);
             }
-        }.runTaskTimer(this, 40, 20 * 5);
+        }.runTaskTimer(this, 40, 20 * 30);
     }
 
     private Map<World, ProtectedRegion> getAllSpawnableRegions() {
@@ -127,6 +131,22 @@ public final class FamiliarsPlugin extends JavaPlugin {
                     });
         });
         return spawnableRegionsMap;
+    }
+
+    private List<UntamedFamiliar> getUntamedFamiliarList() {
+        List<UntamedFamiliar> untamedFamiliarList = new ArrayList<>();
+
+        UntamedFamiliar untamedFamiliar1 = new UntamedFamiliar(Skeleton.class, Chat.colorizeHex("#B195D2&lManiac"), new Rarity(Chat.colorize("&6&lLEGENDARY")),
+                "maniac", new DistanceTimedTamingProcess("test", Particle.HEART, Sound.ENTITY_PLAYER_LEVELUP,
+                5, 5), 50.0, 50.0);
+        UntamedFamiliar untamedFamiliar2 = new UntamedFamiliar(Horse.class, Chat.colorizeHex("#B195D2&lCrayCray"), new Rarity(Chat.colorize("&6&lLEGENDARY")),
+                "maniac", new DistanceTimedTamingProcess("test", Particle.HEART, Sound.ENTITY_PLAYER_LEVELUP,
+                5, 5), 50.0, 90.0);
+
+        untamedFamiliarList.add(untamedFamiliar1);
+        untamedFamiliarList.add(untamedFamiliar2);
+
+        return untamedFamiliarList;
     }
 
 }

@@ -17,6 +17,12 @@ public abstract class Familiar implements Interactable {
     @Setter
     private String id;
 
+    protected Familiar(String displayName, Rarity rarity, String id) {
+        this.displayName = displayName;
+        this.rarity = rarity;
+        this.id = id;
+    }
+
     protected Familiar(Entity entity, String displayName, Rarity rarity, String id) {
         this.entity = entity;
         this.displayName = displayName;

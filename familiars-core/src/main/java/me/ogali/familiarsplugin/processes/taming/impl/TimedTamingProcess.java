@@ -10,7 +10,7 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 
 @Getter
-public class TimedTamingProcess extends AbstractTamingProcess {
+public abstract class TimedTamingProcess extends AbstractTamingProcess {
 
     private final long durationInSeconds;
     private TamingRunnable tamingRunnable;

@@ -2,6 +2,7 @@ package me.ogali.familiarsplugin.processes.taming;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.ogali.familiarsplugin.FamiliarsPlugin;
 import me.ogali.familiarsplugin.familiars.impl.TamedFamiliar;
 import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
 import me.ogali.familiarsplugin.nms.CustomCreatureProvider;
@@ -35,6 +36,7 @@ public abstract class AbstractTamingProcess implements TamingProcess {
 
     @Override
     public void finishTaming(FamiliarPlayer familiarPlayer, UntamedFamiliar untamedFamiliar) {
+        FamiliarsPlugin.getInstance().getFamiliarRegistry().unregisterFamiliar(untamedFamiliar);
         untamedFamiliar.getEntity().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, untamedFamiliar.getEntity().getLocation(), 10);
         familiarPlayer.getPlayer().playSound(familiarPlayer.getPlayer(), Sound.BLOCK_COMPOSTER_FILL_SUCCESS, 5, 5);
         TamedFamiliar tamedFamiliar = CustomCreatureProvider.spawnTamedFamiliar(familiarPlayer.getPlayer(), untamedFamiliar);
@@ -55,11 +57,14 @@ public abstract class AbstractTamingProcess implements TamingProcess {
                 untamedFamiliar.getEntity().getLocation().add(0, 2, 0), 10);
         familiarPlayer.getPlayer().playSound(familiarPlayer.getPlayer(),
                 Sound.BLOCK_ANVIL_DESTROY, 2, 2);
+        this.progress = 0;
     }
 
     @Override
     public boolean canContinueToTame(FamiliarPlayer familiarPlayer, UntamedFamiliar untamedFamiliar) {
         return true;
     }
+
+    public abstract AbstractTamingProcess clone();
 
 }
