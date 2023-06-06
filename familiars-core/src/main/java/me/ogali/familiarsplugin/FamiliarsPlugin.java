@@ -23,9 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -139,7 +137,7 @@ public final class FamiliarsPlugin extends JavaPlugin {
         UntamedFamiliar untamedFamiliar1 = new UntamedFamiliar(Skeleton.class, Chat.colorizeHex("#B195D2&lManiac"), new Rarity(Chat.colorize("&6&lLEGENDARY")),
                 "maniac", new DistanceTimedTamingProcess("test", Particle.HEART, Sound.ENTITY_PLAYER_LEVELUP,
                 5, 5), 50.0, 50.0);
-        UntamedFamiliar untamedFamiliar2 = new UntamedFamiliar(Horse.class, Chat.colorizeHex("#B195D2&lCrayCray"), new Rarity(Chat.colorize("&6&lLEGENDARY")),
+        UntamedFamiliar untamedFamiliar2 = new UntamedFamiliar(Vex.class, Chat.colorizeHex("#B195D2&lCrayCray"), new Rarity(Chat.colorize("&6&lLEGENDARY")),
                 "maniac", new DistanceTimedTamingProcess("test", Particle.HEART, Sound.ENTITY_PLAYER_LEVELUP,
                 5, 5), 50.0, 90.0);
 

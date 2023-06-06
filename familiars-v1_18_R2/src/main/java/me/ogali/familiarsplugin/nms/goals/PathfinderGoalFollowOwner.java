@@ -45,8 +45,8 @@ public class PathfinderGoalFollowOwner extends Goal {
 
     @Override
     public void start() {
-        pathfinderMob.getNavigation().moveTo(this.lastFamiliarOwnerX, this.lastFamiliarOwnerY,
-                this.lastFamiliarOwnerZ, tamedFamiliar.getSpeed());
+        pathfinderMob.getNavigation().moveTo(this.lastFamiliarOwnerX - 1, this.lastFamiliarOwnerY - 1,
+                this.lastFamiliarOwnerZ - 1, tamedFamiliar.getSpeed());
     }
 
     @Override

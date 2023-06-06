@@ -3,9 +3,9 @@ package me.ogali.familiarsplugin.familiars.impl;
 import lombok.Getter;
 import me.ogali.familiarsplugin.familiars.Rarity;
 import me.ogali.familiarsplugin.familiars.domain.Familiar;
+import me.ogali.familiarsplugin.nms.CustomSkullProvider;
 import me.ogali.familiarsplugin.utils.Chat;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -42,7 +42,7 @@ public class TamedFamiliar extends Familiar {
     public void interact(Player player) {
         Inventory inventory = Bukkit.createInventory(player, InventoryType.DROPPER,
                 Chat.colorizeHex("&6&lManage " + getDisplayName()));
-        ItemStack infoItem = new ItemStack(Material.PLAYER_HEAD);
+        ItemStack infoItem = CustomSkullProvider.getCustomSkull(getEntity().getType());
         ItemMeta itemMeta = infoItem.getItemMeta();
         itemMeta.setDisplayName(Chat.colorize("&d&lPET INFO"));
         itemMeta.setLore(List.of(Chat.colorize("&fType: " + getEntity().getType()), Chat.colorize("&fHealth: " +
