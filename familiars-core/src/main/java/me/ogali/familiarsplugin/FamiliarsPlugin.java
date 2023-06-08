@@ -17,6 +17,8 @@ import me.ogali.familiarsplugin.listeners.PlayerJoinListener;
 import me.ogali.familiarsplugin.nms.ActionBarProvider;
 import me.ogali.familiarsplugin.players.FamiliarPlayerRegistry;
 import me.ogali.familiarsplugin.processes.taming.impl.impl.DistanceTimedTamingProcess;
+import me.ogali.familiarsplugin.prompts.listeners.ChatPromptListener;
+import me.ogali.familiarsplugin.prompts.registry.ChatPromptRegistry;
 import me.ogali.familiarsplugin.regions.domain.SpawnableRegion;
 import me.ogali.familiarsplugin.utils.Chat;
 import org.bukkit.Bukkit;
@@ -24,6 +26,7 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.*;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -40,6 +43,8 @@ public final class FamiliarsPlugin extends JavaPlugin {
     private FamiliarRegistry familiarRegistry;
     @Getter
     private FamiliarPlayerRegistry familiarPlayerRegistry;
+    @Getter
+    private ChatPromptRegistry chatPromptRegistry;
 
     public static StateFlag FAMILLIAR_SPAWNING_FLAG;
 
@@ -85,11 +90,15 @@ public final class FamiliarsPlugin extends JavaPlugin {
     private void registerHandlers() {
         this.familiarRegistry = new FamiliarRegistry();
         this.familiarPlayerRegistry = new FamiliarPlayerRegistry();
+        this.chatPromptRegistry = new ChatPromptRegistry();
     }
 
     private void registerListeners() {
-        getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        PluginManager pluginManager = getServer().getPluginManager();
+
+        pluginManager.registerEvents(new PlayerInteractListener(this), this);
+        pluginManager.registerEvents(new PlayerJoinListener(this), this);
+        pluginManager.registerEvents(new ChatPromptListener(chatPromptRegistry), this);
     }
 
     private void loadSpawnableRegionsLater() {

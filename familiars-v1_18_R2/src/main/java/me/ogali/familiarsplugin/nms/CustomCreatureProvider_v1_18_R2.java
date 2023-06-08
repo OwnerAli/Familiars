@@ -4,6 +4,7 @@ import me.ogali.familiarsplugin.FamiliarsPlugin;
 import me.ogali.familiarsplugin.familiars.Rarity;
 import me.ogali.familiarsplugin.familiars.impl.TamedFamiliar;
 import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
+import me.ogali.familiarsplugin.nms.goals.PathFinderGoalLookAtOwner;
 import me.ogali.familiarsplugin.nms.goals.PathfinderGoalFollowOwner;
 import me.ogali.familiarsplugin.utils.Chat;
 import net.minecraft.network.chat.TextComponent;
@@ -63,6 +64,7 @@ public class CustomCreatureProvider_v1_18_R2 extends CustomCreatureProvider {
 
         mob.goalSelector.removeAllGoals();
         mob.goalSelector.addGoal(0, new PathfinderGoalFollowOwner(tamedFamiliar, (PathfinderMob) mob));
+        mob.goalSelector.addGoal(1, new PathFinderGoalLookAtOwner(mob, owner));
 
         mcEntity.remove(net.minecraft.world.entity.Entity.RemovalReason.DISCARDED);
         craftWorld.addEntityToWorld(mob, CreatureSpawnEvent.SpawnReason.CUSTOM);
