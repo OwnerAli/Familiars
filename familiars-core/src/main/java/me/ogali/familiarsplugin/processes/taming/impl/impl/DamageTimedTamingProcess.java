@@ -1,6 +1,6 @@
 package me.ogali.familiarsplugin.processes.taming.impl.impl;
 
-import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
+import me.ogali.familiarsplugin.familiars.impl.impl.UntamedLivingFamiliar;
 import me.ogali.familiarsplugin.players.domain.FamiliarPlayer;
 import me.ogali.familiarsplugin.processes.taming.AbstractTamingProcess;
 import me.ogali.familiarsplugin.processes.taming.impl.TimedTamingProcess;
@@ -20,15 +20,13 @@ public class DamageTimedTamingProcess extends TimedTamingProcess {
     }
 
     @Override
-    public boolean canContinueToTame(FamiliarPlayer familiarPlayer, UntamedFamiliar untamedFamiliar) {
-        if (!(untamedFamiliar.getEntity() instanceof LivingEntity livingEntity)) return false;
-        return livingEntity.getHealth() >= originalEntityHealth - maxDamageTaken;
+    public boolean canContinueToTame(FamiliarPlayer familiarPlayer, UntamedLivingFamiliar untamedFamiliar) {
+        return untamedFamiliar.getLivingEntity().getHealth() >= originalEntityHealth - maxDamageTaken;
     }
 
     @Override
-    public void cancelTaming(FamiliarPlayer familiarPlayer, UntamedFamiliar untamedFamiliar) {
-        if (!(untamedFamiliar.getEntity() instanceof LivingEntity livingEntity)) return;
-        livingEntity.setHealth(originalEntityHealth);
+    public void cancelTaming(FamiliarPlayer familiarPlayer, UntamedLivingFamiliar untamedFamiliar) {
+        untamedFamiliar.getLivingEntity().setHealth(originalEntityHealth);
         super.cancelTaming(familiarPlayer, untamedFamiliar);
     }
 

@@ -2,7 +2,7 @@ package me.ogali.familiarsplugin.runnables;
 
 import lombok.RequiredArgsConstructor;
 import me.ogali.familiarsplugin.FamiliarsPlugin;
-import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
+import me.ogali.familiarsplugin.familiars.impl.impl.UntamedLivingFamiliar;
 import me.ogali.familiarsplugin.players.domain.FamiliarPlayer;
 import me.ogali.familiarsplugin.processes.taming.impl.TimedTamingProcess;
 import org.bukkit.Particle;
@@ -14,7 +14,7 @@ public class TamingRunnable extends BukkitRunnable {
 
     private final TimedTamingProcess timedTamingProcess;
     private final FamiliarPlayer familiarPlayer;
-    private final UntamedFamiliar untamedFamiliar;
+    private final UntamedLivingFamiliar untamedFamiliar;
     private final FamiliarsPlugin familiarsPlugin;
     private BukkitTask task;
 
@@ -31,8 +31,8 @@ public class TamingRunnable extends BukkitRunnable {
         }
 
         timedTamingProcess.setProgress(timedTamingProcess.getProgress() + calculateTamingIncrement());
-        untamedFamiliar.getEntity().getWorld().spawnParticle(Particle.HEART,
-                untamedFamiliar.getEntity().getLocation().add(0, 2, 0), 10);
+        untamedFamiliar.getLivingEntity().getWorld().spawnParticle(Particle.HEART,
+                untamedFamiliar.getLivingEntity().getLocation().add(0, 2, 0), 10);
     }
 
     public void startTaming() {

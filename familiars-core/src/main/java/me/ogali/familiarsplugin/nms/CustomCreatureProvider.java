@@ -1,7 +1,8 @@
 package me.ogali.familiarsplugin.nms;
 
-import me.ogali.familiarsplugin.familiars.impl.TamedFamiliar;
-import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
+import me.ogali.familiarsplugin.familiars.impl.Familiar;
+import me.ogali.familiarsplugin.familiars.impl.impl.TamedLivingFamiliar;
+import me.ogali.familiarsplugin.familiars.impl.impl.UntamedLivingFamiliar;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -25,15 +26,15 @@ public abstract class CustomCreatureProvider {
         }
     }
 
-    public abstract void spawnCustomMobInCraftWorld(UntamedFamiliar untamedFamiliar, Location location);
+    public abstract void spawnCustomMobInCraftWorld(Familiar familiar, Location location);
 
-    public abstract TamedFamiliar spawnCustomMobInCraftWorldWithPetPathfinderGoals(Player owner, UntamedFamiliar untamedFamiliar);
+    public abstract TamedLivingFamiliar spawnCustomMobInCraftWorldWithPetPathfinderGoals(Player owner, UntamedLivingFamiliar untamedFamiliar);
 
-    public static void spawnUntamedFamiliar(UntamedFamiliar untamedFamiliar, Location location) {
-        instance.spawnCustomMobInCraftWorld(untamedFamiliar, location);
+    public static void spawnUntamedFamiliar(Familiar familiar, Location location) {
+        instance.spawnCustomMobInCraftWorld(familiar, location);
     }
 
-    public static TamedFamiliar spawnTamedFamiliar(Player owner, UntamedFamiliar untamedFamiliar) {
+    public static TamedLivingFamiliar spawnTamedFamiliar(Player owner, UntamedLivingFamiliar untamedFamiliar) {
         return instance.spawnCustomMobInCraftWorldWithPetPathfinderGoals(owner, untamedFamiliar);
     }
 

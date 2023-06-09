@@ -2,7 +2,7 @@ package me.ogali.familiarsplugin.processes.taming.impl;
 
 import lombok.Getter;
 import me.ogali.familiarsplugin.FamiliarsPlugin;
-import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
+import me.ogali.familiarsplugin.familiars.impl.impl.UntamedLivingFamiliar;
 import me.ogali.familiarsplugin.players.domain.FamiliarPlayer;
 import me.ogali.familiarsplugin.processes.taming.AbstractTamingProcess;
 import me.ogali.familiarsplugin.runnables.TamingRunnable;
@@ -21,7 +21,7 @@ public abstract class TimedTamingProcess extends AbstractTamingProcess {
     }
 
     @Override
-    public void startTaming(FamiliarPlayer familiarPlayer, UntamedFamiliar untamedFamiliar) {
+    public void startTaming(FamiliarPlayer familiarPlayer, UntamedLivingFamiliar untamedFamiliar) {
         if (!canContinueToTame(familiarPlayer, untamedFamiliar)) {
             cancelTaming(familiarPlayer, untamedFamiliar);
             return;
@@ -33,12 +33,12 @@ public abstract class TimedTamingProcess extends AbstractTamingProcess {
     }
 
     @Override
-    public void cancelTaming(FamiliarPlayer familiarPlayer, UntamedFamiliar untamedFamiliar) {
+    public void cancelTaming(FamiliarPlayer familiarPlayer, UntamedLivingFamiliar untamedFamiliar) {
         super.cancelTaming(familiarPlayer, untamedFamiliar);
     }
 
     @Override
-    public void finishTaming(FamiliarPlayer familiarPlayer, UntamedFamiliar untamedFamiliar) {
+    public void finishTaming(FamiliarPlayer familiarPlayer, UntamedLivingFamiliar untamedFamiliar) {
         super.finishTaming(familiarPlayer, untamedFamiliar);
     }
 

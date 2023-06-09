@@ -10,22 +10,19 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import lombok.Getter;
 import me.ogali.familiarsplugin.familiars.FamiliarRegistry;
-import me.ogali.familiarsplugin.familiars.Rarity;
-import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
+import me.ogali.familiarsplugin.familiars.impl.Familiar;
 import me.ogali.familiarsplugin.listeners.PlayerInteractListener;
 import me.ogali.familiarsplugin.listeners.PlayerJoinListener;
 import me.ogali.familiarsplugin.nms.ActionBarProvider;
 import me.ogali.familiarsplugin.players.FamiliarPlayerRegistry;
-import me.ogali.familiarsplugin.processes.taming.impl.impl.DistanceTimedTamingProcess;
 import me.ogali.familiarsplugin.prompts.listeners.ChatPromptListener;
 import me.ogali.familiarsplugin.prompts.registry.ChatPromptRegistry;
 import me.ogali.familiarsplugin.regions.domain.SpawnableRegion;
 import me.ogali.familiarsplugin.utils.Chat;
 import org.bukkit.Bukkit;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -140,20 +137,14 @@ public final class FamiliarsPlugin extends JavaPlugin {
         return spawnableRegionsMap;
     }
 
-    private List<UntamedFamiliar> getUntamedFamiliarList() {
-        List<UntamedFamiliar> untamedFamiliarList = new ArrayList<>();
+    private List<Familiar> getUntamedFamiliarList() {
+        List<Familiar> familiarList = new ArrayList<>();
 
-        UntamedFamiliar untamedFamiliar1 = new UntamedFamiliar(Skeleton.class, Chat.colorizeHex("#B195D2&lManiac"), new Rarity(Chat.colorize("&6&lLEGENDARY")),
-                "maniac", new DistanceTimedTamingProcess("test", Particle.HEART, Sound.ENTITY_PLAYER_LEVELUP,
-                5, 5), 50.0, 50.0);
-        UntamedFamiliar untamedFamiliar2 = new UntamedFamiliar(Vex.class, Chat.colorizeHex("#B195D2&lCrayCray"), new Rarity(Chat.colorize("&6&lLEGENDARY")),
-                "maniac", new DistanceTimedTamingProcess("test", Particle.HEART, Sound.ENTITY_PLAYER_LEVELUP,
-                5, 5), 50.0, 90.0);
+        Familiar familiar = new Familiar("test", "&d&lManiac", EntityType.ENDERMAN);
 
-        untamedFamiliarList.add(untamedFamiliar1);
-        untamedFamiliarList.add(untamedFamiliar2);
+        familiarList.add(familiar);
 
-        return untamedFamiliarList;
+        return familiarList;
     }
 
 }

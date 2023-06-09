@@ -1,9 +1,9 @@
 package me.ogali.familiarsplugin.nms;
 
 import me.ogali.familiarsplugin.FamiliarsPlugin;
-import me.ogali.familiarsplugin.familiars.Rarity;
-import me.ogali.familiarsplugin.familiars.impl.TamedFamiliar;
-import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
+import me.ogali.familiarsplugin.familiars.impl.Familiar;
+import me.ogali.familiarsplugin.familiars.impl.impl.TamedLivingFamiliar;
+import me.ogali.familiarsplugin.familiars.impl.impl.UntamedLivingFamiliar;
 import me.ogali.familiarsplugin.nms.goals.PathFinderGoalLookAtOwner;
 import me.ogali.familiarsplugin.nms.goals.PathfinderGoalFollowOwner;
 import me.ogali.familiarsplugin.utils.Chat;
@@ -14,16 +14,19 @@ import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
+@SuppressWarnings("unused")
 public class CustomCreatureProvider_v1_18_R2 extends CustomCreatureProvider {
 
     @Override
-    public void spawnCustomMobInCraftWorld(UntamedFamiliar untamedFamiliar, Location location) {
+    public void spawnCustomMobInCraftWorld(Familiar familiar, Location location) {
         CraftWorld craftWorld = (CraftWorld) location.getWorld();
-        net.minecraft.world.entity.Entity entity = craftWorld.createEntity(location, untamedFamiliar.getEntityType());
+
+        assert craftWorld != null;
+        net.minecraft.world.entity.Entity entity = craftWorld.createEntity(location, familiar.getEntityType().getEntityClass());
 
         if (!(entity instanceof Mob mob)) return;
 
@@ -38,37 +41,43 @@ public class CustomCreatureProvider_v1_18_R2 extends CustomCreatureProvider {
         addAvoidPlayerPathfinderGoal((PathfinderMob) mob);
 
         // Set untamed familiar's LivingEntity
-        untamedFamiliar.setEntity(mob.getBukkitEntity());
+        UntamedLivingFamiliar untamedLivingFamiliar =
+                new UntamedLivingFamiliar((LivingEntity) mob.getBukkitEntity(), familiar);
 
         // Register familiar
         FamiliarsPlugin.getInstance().getFamiliarRegistry()
-                .registerFamiliar(untamedFamiliar);
+                .registerFamiliar(untamedLivingFamiliar);
 
         // Spawns the entity in the world
         craftWorld.addEntityToWorld(mob, CreatureSpawnEvent.SpawnReason.CUSTOM);
     }
 
     @Override
-    public TamedFamiliar spawnCustomMobInCraftWorldWithPetPathfinderGoals(Player owner, UntamedFamiliar untamedFamiliar) {
-        Entity bukkitEntity = untamedFamiliar.getEntity();
+    public TamedLivingFamiliar spawnCustomMobInCraftWorldWithPetPathfinderGoals(Player owner, UntamedLivingFamiliar untamedFamiliar) {
+        LivingEntity bukkitEntity = untamedFamiliar.getLivingEntity();
         CraftEntity craftEntity = (CraftEntity) bukkitEntity;
         net.minecraft.world.entity.Entity mcEntity = craftEntity.getHandle();
 
         Location bukkitEntityLocation = bukkitEntity.getLocation();
         CraftWorld craftWorld = (CraftWorld) bukkitEntityLocation.getWorld();
 
+        if (craftWorld == null) return null;
+
+        // Creating new entity from the one we already have due to pathfinder goal issues I've had
         Mob mob = cloneMcEntity(mcEntity, craftWorld, bukkitEntityLocation);
 
-        TamedFamiliar tamedFamiliar = new TamedFamiliar(mob.getBukkitEntity(), untamedFamiliar.getDisplayName(),
-                new Rarity("&d&lHELLO"), "Maniac", owner, 1.5);
+        if (mob == null) return null;
+
+        LivingEntity newBukkitEntity = (LivingEntity) mob.getBukkitEntity();
+        TamedLivingFamiliar tamedLivingFamiliar = new TamedLivingFamiliar(owner, untamedFamiliar, newBukkitEntity);
 
         mob.goalSelector.removeAllGoals();
-        mob.goalSelector.addGoal(0, new PathfinderGoalFollowOwner(tamedFamiliar, (PathfinderMob) mob));
+        mob.goalSelector.addGoal(0, new PathfinderGoalFollowOwner(tamedLivingFamiliar, (PathfinderMob) mob));
         mob.goalSelector.addGoal(1, new PathFinderGoalLookAtOwner(mob, owner));
 
         mcEntity.remove(net.minecraft.world.entity.Entity.RemovalReason.DISCARDED);
         craftWorld.addEntityToWorld(mob, CreatureSpawnEvent.SpawnReason.CUSTOM);
-        return tamedFamiliar;
+        return tamedLivingFamiliar;
     }
 
     private Mob cloneMcEntity(net.minecraft.world.entity.Entity entity, CraftWorld craftWorld, Location location) {

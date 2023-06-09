@@ -1,6 +1,6 @@
 package me.ogali.familiarsplugin.nms.goals;
 
-import me.ogali.familiarsplugin.familiars.impl.TamedFamiliar;
+import me.ogali.familiarsplugin.familiars.impl.impl.TamedLivingFamiliar;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -10,7 +10,7 @@ import java.util.EnumSet;
 
 public class PathfinderGoalFollowOwner extends Goal {
 
-    private final TamedFamiliar tamedFamiliar;
+    private final TamedLivingFamiliar tamedFamiliar;
     private final PathfinderMob pathfinderMob;
     private final double maxDistanceBetweenFamiliarAndOwner = 5;
 
@@ -18,7 +18,7 @@ public class PathfinderGoalFollowOwner extends Goal {
     private double lastFamiliarOwnerY;
     private double lastFamiliarOwnerZ;
 
-    public PathfinderGoalFollowOwner(TamedFamiliar tamedFamiliar, PathfinderMob pathfinderMob) {
+    public PathfinderGoalFollowOwner(TamedLivingFamiliar tamedFamiliar, PathfinderMob pathfinderMob) {
         this.tamedFamiliar = tamedFamiliar;
         this.pathfinderMob = pathfinderMob;
         setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP));

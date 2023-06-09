@@ -1,6 +1,6 @@
 package me.ogali.familiarsplugin.familiars;
 
-import me.ogali.familiarsplugin.familiars.domain.Familiar;
+import me.ogali.familiarsplugin.familiars.impl.LivingFamiliar;
 import org.bukkit.entity.Entity;
 
 import java.util.HashSet;
@@ -10,21 +10,21 @@ import java.util.Set;
 
 public final class FamiliarRegistry {
 
-    private final Set<Familiar> familiarSet = new HashSet<>();
+    private final Set<LivingFamiliar> livingFamiliarSet = new HashSet<>();
 
-    public void registerFamiliar(Familiar familiar) {
-        familiarSet.add(familiar);
+    public void registerFamiliar(LivingFamiliar livingFamiliar) {
+        livingFamiliarSet.add(livingFamiliar);
     }
 
-    public void unregisterFamiliar(Familiar familiar) {
-        familiarSet.remove(familiar);
+    public void unregisterFamiliar(LivingFamiliar livingFamiliar) {
+        livingFamiliarSet.remove(livingFamiliar);
     }
 
-    public Optional<Familiar> getFamiliar(Entity entity) {
-        return familiarSet
+    public Optional<LivingFamiliar> getFamiliar(Entity entity) {
+        return livingFamiliarSet
                 .stream()
-                .filter(familiar -> !Objects.isNull(familiar.getEntity()))
-                .filter(familiar -> familiar.getEntity().equals(entity))
+                .filter(familiar -> !Objects.isNull(familiar.getLivingEntity()))
+                .filter(familiar -> familiar.getLivingEntity().equals(entity))
                 .findFirst();
     }
 

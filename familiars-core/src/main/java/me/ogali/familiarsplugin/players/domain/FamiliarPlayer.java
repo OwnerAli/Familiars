@@ -2,9 +2,9 @@ package me.ogali.familiarsplugin.players.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.ogali.familiarsplugin.familiars.domain.Familiar;
-import me.ogali.familiarsplugin.familiars.impl.TamedFamiliar;
-import org.bukkit.entity.Entity;
+import me.ogali.familiarsplugin.familiars.impl.LivingFamiliar;
+import me.ogali.familiarsplugin.familiars.impl.impl.TamedLivingFamiliar;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -14,24 +14,24 @@ import java.util.Set;
 public class FamiliarPlayer {
 
     private final Player player;
-    private final Set<TamedFamiliar> ownedFamiliarSet;
+    private final Set<TamedLivingFamiliar> ownedFamiliarSet;
 
     @Setter
-    private Familiar activeFamiliar;
+    private LivingFamiliar activeLivingFamiliar;
 
     public FamiliarPlayer(Player player) {
         this.player = player;
         this.ownedFamiliarSet = new HashSet<>();
     }
 
-    public void addTamedFamiliar(TamedFamiliar tamedFamiliar) {
+    public void addTamedFamiliar(TamedLivingFamiliar tamedFamiliar) {
         ownedFamiliarSet.add(tamedFamiliar);
     }
 
-    public void interactIfOwned(Entity entity) {
+    public void interactIfOwned(LivingEntity entity) {
         ownedFamiliarSet
                 .stream()
-                .filter(familiar -> familiar.getEntity().equals(entity))
+                .filter(familiar -> familiar.getLivingEntity().equals(entity))
                 .findFirst()
                 .ifPresent(familiar -> familiar.interact(player));
     }

@@ -5,7 +5,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import lombok.RequiredArgsConstructor;
 import me.ogali.familiarsplugin.FamiliarsPlugin;
 import me.ogali.familiarsplugin.familiars.Rarity;
-import me.ogali.familiarsplugin.familiars.impl.UntamedFamiliar;
+import me.ogali.familiarsplugin.familiars.impl.Familiar;
 import me.ogali.familiarsplugin.nms.CustomCreatureProvider;
 import me.ogali.familiarsplugin.randomizers.domain.UntamedFamiliarSelector;
 import me.ogali.familiarsplugin.regions.Spawnable;
@@ -25,11 +25,11 @@ public class SpawnableRegion implements Spawnable {
 
     private final Set<Rarity> raritySet;
 
-    public SpawnableRegion(World world, ProtectedRegion region, List<UntamedFamiliar> untamedFamiliarList) {
+    public SpawnableRegion(World world, ProtectedRegion region, List<Familiar> untamedFamiliarListTemplate) {
         this.world = world;
         this.region = region;
         this.raritySet = new HashSet<>();
-        this.untamedFamiliarSelector = new UntamedFamiliarSelector(untamedFamiliarList);
+        this.untamedFamiliarSelector = new UntamedFamiliarSelector(untamedFamiliarListTemplate);
     }
 
     @Override
