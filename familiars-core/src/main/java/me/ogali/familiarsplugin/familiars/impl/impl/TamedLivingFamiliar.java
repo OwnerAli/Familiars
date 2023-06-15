@@ -33,6 +33,34 @@ public class TamedLivingFamiliar extends LivingFamiliar {
     }
 
     @Override
+    public void setDisplayName(String displayName) {
+        super.setDisplayName(displayName);
+        getLivingEntity().setCustomName(Chat.colorizeHex(displayName));
+    }
+
+    @Override
+    public void setSpeed(double speed) {
+        super.setSpeed(speed);
+
+        AttributeInstance speedAttribute = getLivingEntity().getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+
+        if (speedAttribute == null) return;
+
+        speedAttribute.setBaseValue(speed);
+    }
+
+    @Override
+    public void setHealth(double health) {
+        super.setHealth(health);
+
+        AttributeInstance healthAttribute = getLivingEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH);
+
+        if (healthAttribute == null) return;
+
+        healthAttribute.setBaseValue(health);
+    }
+
+    @Override
     public void interact(Player player) {
         new OwnedFamiliarManagementMenu().show(player, this);
     }

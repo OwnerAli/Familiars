@@ -6,18 +6,23 @@ import me.ogali.familiarsplugin.familiars.impl.impl.UntamedLivingFamiliar;
 import me.ogali.familiarsplugin.players.domain.FamiliarPlayer;
 import me.ogali.familiarsplugin.processes.taming.AbstractTamingProcess;
 import me.ogali.familiarsplugin.runnables.TamingRunnable;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 
 @Getter
-public abstract class TimedTamingProcess extends AbstractTamingProcess {
+public class TimedTamingProcess extends AbstractTamingProcess {
 
-    private final long durationInSeconds;
+    private long durationInSeconds;
     private TamingRunnable tamingRunnable;
 
     public TimedTamingProcess(String id, Particle particle, Sound sound, long durationInSeconds) {
         super(id, particle, sound);
         this.durationInSeconds = durationInSeconds;
+    }
+
+    public TimedTamingProcess(String id) {
+        super(id);
     }
 
     @Override
@@ -40,6 +45,16 @@ public abstract class TimedTamingProcess extends AbstractTamingProcess {
     @Override
     public void finishTaming(FamiliarPlayer familiarPlayer, UntamedLivingFamiliar untamedFamiliar) {
         super.finishTaming(familiarPlayer, untamedFamiliar);
+    }
+
+    @Override
+    public Material getDisplayMaterial() {
+        return Material.CLOCK;
+    }
+
+    @Override
+    public AbstractTamingProcess clone() {
+        return null;
     }
 
 }

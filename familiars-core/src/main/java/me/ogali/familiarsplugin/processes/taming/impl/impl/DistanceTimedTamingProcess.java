@@ -1,5 +1,6 @@
 package me.ogali.familiarsplugin.processes.taming.impl.impl;
 
+import lombok.Setter;
 import me.ogali.familiarsplugin.familiars.impl.impl.UntamedLivingFamiliar;
 import me.ogali.familiarsplugin.players.domain.FamiliarPlayer;
 import me.ogali.familiarsplugin.processes.taming.AbstractTamingProcess;
@@ -10,11 +11,16 @@ import org.bukkit.Sound;
 
 public class DistanceTimedTamingProcess extends TimedTamingProcess {
 
-    private final int distanceInBlocks;
+    @Setter
+    private int distanceInBlocks;
 
     public DistanceTimedTamingProcess(String id, Particle particle, Sound sound, long durationInSeconds, int distanceInBlocks) {
         super(id, particle, sound, durationInSeconds);
         this.distanceInBlocks = distanceInBlocks;
+    }
+
+    public DistanceTimedTamingProcess(String id) {
+        super(id);
     }
 
     @Override

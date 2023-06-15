@@ -6,7 +6,6 @@ import me.ogali.familiarsplugin.FamiliarsPlugin;
 import me.ogali.familiarsplugin.familiars.Tameable;
 import me.ogali.familiarsplugin.familiars.impl.Familiar;
 import me.ogali.familiarsplugin.familiars.impl.LivingFamiliar;
-import me.ogali.familiarsplugin.processes.taming.AbstractTamingProcess;
 import me.ogali.familiarsplugin.utils.Chat;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -17,7 +16,6 @@ import org.bukkit.entity.Player;
 @Setter
 public class UntamedLivingFamiliar extends LivingFamiliar implements Tameable {
 
-    private AbstractTamingProcess tamingProcess;
     private double tameChance;
 
     public UntamedLivingFamiliar(LivingEntity livingEntity, Familiar familiar) {
@@ -42,7 +40,10 @@ public class UntamedLivingFamiliar extends LivingFamiliar implements Tameable {
     public void interact(Player player) {
         FamiliarsPlugin.getInstance().getFamiliarPlayerRegistry()
                 .getFamiliarPlayerByPlayer(player)
-                .ifPresent(familiarPlayer -> tamingProcess.interactWithUntamed(familiarPlayer, this));
+                .ifPresent(familiarPlayer -> {
+                    if (getTamingProcess() == null) return;
+                    getTamingProcess().interactWithUntamed(familiarPlayer, this);
+                });
     }
 
 }

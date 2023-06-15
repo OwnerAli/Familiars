@@ -7,6 +7,7 @@ import me.ogali.familiarsplugin.familiars.impl.impl.TamedLivingFamiliar;
 import me.ogali.familiarsplugin.familiars.impl.impl.UntamedLivingFamiliar;
 import me.ogali.familiarsplugin.nms.CustomCreatureProvider;
 import me.ogali.familiarsplugin.players.domain.FamiliarPlayer;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 
@@ -14,8 +15,8 @@ import org.bukkit.Sound;
 public abstract class AbstractTamingProcess implements TamingProcess {
 
     private final String id;
-    private final Particle particle;
-    private final Sound sound;
+    private Particle particle;
+    private Sound sound;
 
     @Setter
     private int progress;
@@ -26,6 +27,10 @@ public abstract class AbstractTamingProcess implements TamingProcess {
         this.id = id;
         this.particle = particle;
         this.sound = sound;
+    }
+
+    protected AbstractTamingProcess(String id) {
+        this.id = id;
     }
 
     @Override
@@ -64,6 +69,8 @@ public abstract class AbstractTamingProcess implements TamingProcess {
     public boolean canContinueToTame(FamiliarPlayer familiarPlayer, UntamedLivingFamiliar untamedFamiliar) {
         return true;
     }
+
+    public abstract Material getDisplayMaterial();
 
     public abstract AbstractTamingProcess clone();
 

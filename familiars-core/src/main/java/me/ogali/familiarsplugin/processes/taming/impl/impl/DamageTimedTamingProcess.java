@@ -1,22 +1,27 @@
 package me.ogali.familiarsplugin.processes.taming.impl.impl;
 
+import lombok.Setter;
 import me.ogali.familiarsplugin.familiars.impl.impl.UntamedLivingFamiliar;
 import me.ogali.familiarsplugin.players.domain.FamiliarPlayer;
 import me.ogali.familiarsplugin.processes.taming.AbstractTamingProcess;
 import me.ogali.familiarsplugin.processes.taming.impl.TimedTamingProcess;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.entity.LivingEntity;
 
+@Setter
 public class DamageTimedTamingProcess extends TimedTamingProcess {
 
-    protected final double maxDamageTaken;
+    protected double maxDamageTaken;
     protected float originalEntityHealth;
 
     public DamageTimedTamingProcess(String id, Particle particle, Sound sound, long durationInSeconds, double maxDamageTaken, float originalEntityHealth) {
         super(id, particle, sound, durationInSeconds);
         this.maxDamageTaken = maxDamageTaken;
         this.originalEntityHealth = originalEntityHealth;
+    }
+
+    public DamageTimedTamingProcess(String id) {
+        super(id);
     }
 
     @Override

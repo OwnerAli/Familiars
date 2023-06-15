@@ -4,17 +4,11 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import lombok.RequiredArgsConstructor;
 import me.ogali.familiarsplugin.FamiliarsPlugin;
-import me.ogali.familiarsplugin.familiars.Rarity;
-import me.ogali.familiarsplugin.familiars.impl.Familiar;
 import me.ogali.familiarsplugin.nms.CustomCreatureProvider;
 import me.ogali.familiarsplugin.randomizers.domain.UntamedFamiliarSelector;
 import me.ogali.familiarsplugin.regions.Spawnable;
 import org.bukkit.Location;
 import org.bukkit.World;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 public class SpawnableRegion implements Spawnable {
@@ -23,19 +17,24 @@ public class SpawnableRegion implements Spawnable {
     private final ProtectedRegion region;
     private final UntamedFamiliarSelector untamedFamiliarSelector;
 
-    private final Set<Rarity> raritySet;
+    private final int maxFamiliarsPerRegion = 5;
+    private int spawnedFamiliarsInRegion;
 
-    public SpawnableRegion(World world, ProtectedRegion region, List<Familiar> untamedFamiliarListTemplate) {
+    public SpawnableRegion(World world, ProtectedRegion region) {
         this.world = world;
         this.region = region;
-        this.raritySet = new HashSet<>();
-        this.untamedFamiliarSelector = new UntamedFamiliarSelector(untamedFamiliarListTemplate);
+        this.untamedFamiliarSelector = new UntamedFamiliarSelector();
     }
 
     @Override
     public void spawn() {
+        untamedFamiliarSelector.setFamiliarList(FamiliarsPlugin.getInstance()
+                .getFamiliarRegistry().getAbstractFamiliarList());
+        if (untamedFamiliarSelector.getFamiliarList().isEmpty()) return;
+        if (spawnedFamiliarsInRegion >= maxFamiliarsPerRegion) return;
         CustomCreatureProvider.spawnUntamedFamiliar(untamedFamiliarSelector.getRandomSelection(),
                 getRandomLocationInRegion());
+        spawnedFamiliarsInRegion++;
     }
 
     private Location getRandomLocationInRegion() {

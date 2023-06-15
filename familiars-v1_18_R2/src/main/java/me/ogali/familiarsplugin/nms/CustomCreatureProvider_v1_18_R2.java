@@ -43,6 +43,7 @@ public class CustomCreatureProvider_v1_18_R2 extends CustomCreatureProvider {
         // Set untamed familiar's LivingEntity
         UntamedLivingFamiliar untamedLivingFamiliar =
                 new UntamedLivingFamiliar((LivingEntity) mob.getBukkitEntity(), familiar);
+        untamedLivingFamiliar.setTamingProcess(familiar.getTamingProcess());
 
         // Register familiar
         FamiliarsPlugin.getInstance().getFamiliarRegistry()

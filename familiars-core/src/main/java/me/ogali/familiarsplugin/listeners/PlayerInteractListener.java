@@ -20,7 +20,7 @@ public class PlayerInteractListener implements Listener {
         if (event.getHand() != EquipmentSlot.HAND) return;
         if (!(event.getRightClicked() instanceof LivingEntity livingEntity)) return;
 
-        main.getFamiliarRegistry().getFamiliar(event.getRightClicked())
+        main.getFamiliarRegistry().getLivingFamiliarByEntity(event.getRightClicked())
                 .ifPresent(familiar -> familiar.interact(event.getPlayer()));
         main.getFamiliarPlayerRegistry().getFamiliarPlayerByPlayer(event.getPlayer())
                 .ifPresent(familiarPlayer -> familiarPlayer.interactIfOwned(livingEntity));

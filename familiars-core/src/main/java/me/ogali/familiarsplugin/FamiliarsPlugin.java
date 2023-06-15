@@ -1,5 +1,7 @@
 package me.ogali.familiarsplugin;
 
+import co.aikar.commands.MessageType;
+import co.aikar.commands.PaperCommandManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.StateFlag;
@@ -9,19 +11,20 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import lombok.Getter;
+import me.ogali.familiarsplugin.commands.CreationCommands;
 import me.ogali.familiarsplugin.familiars.FamiliarRegistry;
-import me.ogali.familiarsplugin.familiars.impl.Familiar;
 import me.ogali.familiarsplugin.listeners.PlayerInteractListener;
 import me.ogali.familiarsplugin.listeners.PlayerJoinListener;
 import me.ogali.familiarsplugin.nms.ActionBarProvider;
 import me.ogali.familiarsplugin.players.FamiliarPlayerRegistry;
+import me.ogali.familiarsplugin.processes.taming.registry.TamingProcessRegistry;
 import me.ogali.familiarsplugin.prompts.listeners.ChatPromptListener;
 import me.ogali.familiarsplugin.prompts.registry.ChatPromptRegistry;
 import me.ogali.familiarsplugin.regions.domain.SpawnableRegion;
 import me.ogali.familiarsplugin.utils.Chat;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,18 +32,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
+@Getter
 public final class FamiliarsPlugin extends JavaPlugin {
 
     @Getter
     public static FamiliarsPlugin instance;
-    @Getter
     private Random random;
 
-    @Getter
     private FamiliarRegistry familiarRegistry;
-    @Getter
+    private TamingProcessRegistry tamingProcessRegistry;
     private FamiliarPlayerRegistry familiarPlayerRegistry;
-    @Getter
     private ChatPromptRegistry chatPromptRegistry;
 
     public static StateFlag FAMILLIAR_SPAWNING_FLAG;
@@ -81,11 +82,13 @@ public final class FamiliarsPlugin extends JavaPlugin {
         saveDefaultConfig();
         registerHandlers();
         registerListeners();
+        registerCommands();
         loadSpawnableRegionsLater();
     }
 
     private void registerHandlers() {
         this.familiarRegistry = new FamiliarRegistry();
+        this.tamingProcessRegistry = new TamingProcessRegistry();
         this.familiarPlayerRegistry = new FamiliarPlayerRegistry();
         this.chatPromptRegistry = new ChatPromptRegistry();
     }
@@ -98,9 +101,17 @@ public final class FamiliarsPlugin extends JavaPlugin {
         pluginManager.registerEvents(new ChatPromptListener(chatPromptRegistry), this);
     }
 
+    private void registerCommands() {
+        PaperCommandManager paperCommandManager = new PaperCommandManager(this);
+
+        paperCommandManager.setFormat(MessageType.SYNTAX, ChatColor.DARK_RED, ChatColor.DARK_RED);
+        paperCommandManager.registerCommand(new CreationCommands());
+    }
+
     private void loadSpawnableRegionsLater() {
         List<SpawnableRegion> spawnableRegionList = new ArrayList<>();
-        getAllSpawnableRegions().forEach((world, region) -> spawnableRegionList.add(new SpawnableRegion(world, region, getUntamedFamiliarList())));
+        getAllSpawnableRegions().forEach((world, region) ->
+                spawnableRegionList.add(new SpawnableRegion(world, region)));
 
         new BukkitRunnable() {
             @Override
@@ -135,16 +146,6 @@ public final class FamiliarsPlugin extends JavaPlugin {
                     });
         });
         return spawnableRegionsMap;
-    }
-
-    private List<Familiar> getUntamedFamiliarList() {
-        List<Familiar> familiarList = new ArrayList<>();
-
-        Familiar familiar = new Familiar("test", "&d&lManiac", EntityType.ENDERMAN);
-
-        familiarList.add(familiar);
-
-        return familiarList;
     }
 
 }
